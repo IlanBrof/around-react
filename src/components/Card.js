@@ -15,7 +15,7 @@ function Card(props) {
         className="card__image"
         onClick={imageDataForPopup}
         src={props.card.link}
-        alt="card image"
+        alt={props.card.name}
       />
       <div className="card__photo-description">
         <h2 className="card__text">{props.card.name}</h2>

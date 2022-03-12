@@ -12,7 +12,7 @@ function PopupWithForm(props) {
           aria-label="close-button"
         ></button>
         <h3 className="popup-menu__title">{props.headerText}</h3>
-        <form className="popup-menu__submit-form" name="form-wrapper">
+        <form className="popup-menu__submit-form" name={`form-${props.name}`}>
           {props.children}
           <button
             className="popup-menu__save-button"
