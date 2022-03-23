@@ -107,13 +107,16 @@ function App() {
   }
 
   function handleUpdateAvatar(userData) {
-    api.setUserAvatar(userData.avatar).then((data) => {
+    api.setUserAvatar(userData.avatar)
+    .then((data) => {
       setCurrentUser(data);
-      closeAllPopups()
-        .catch((err) => {
-        console.log(err);
-      });
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
     });
+
+
   }
 
   function handleEditProfilePopupClick() {
