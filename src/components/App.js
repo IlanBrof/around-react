@@ -18,6 +18,7 @@ function App() {
   const [isCardImagePopupOpen, setIsCardImagePopupOpen] = React.useState(false);
   const [cardData, setCardData] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const [currentUser, setCurrentUser] = React.useState({});
   React.useEffect(() => {
@@ -32,14 +33,19 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
+    (async function () {
+      setLoading(true);
+      try {
+        const cardsData = await api.getInitialCards();
+        if (cardsData) {
+          setCards(cardsData);
+        }
+      } catch (err) {
         console.log(err);
-      });
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   function handleUserInfo(newCard) {
@@ -91,8 +97,8 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => {
-      console.log(err);
-    });
+        console.log(err);
+      });
   }
 
   function handleCardDelete(card) {
@@ -107,16 +113,15 @@ function App() {
   }
 
   function handleUpdateAvatar(userData) {
-    api.setUserAvatar(userData.avatar)
-    .then((data) => {
-      setCurrentUser(data);
-      closeAllPopups();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-
+    api
+      .setUserAvatar(userData.avatar)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleEditProfilePopupClick() {
@@ -171,6 +176,7 @@ function App() {
           cards={cards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
+          loading={loading}
         />
 
         <EditProfilePopup
