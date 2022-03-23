@@ -51,15 +51,6 @@ class Api {
     return this._checkResponse(response);
   }
 
-  async addCard(name, link) {
-    const response = await fetch(`${this._url}/cards`, {
-      method: 'POST',
-      headers: this._headers,
-      body: { name: name, link: link },
-    });
-    return this._checkResponse(response);
-  }
-
   async deleteCard(cardId) {
     const response = await fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',

@@ -1,44 +1,17 @@
 import React from 'react';
-import { api } from '../utils/api';
 import Card from './Card';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function Main(props) {
-  const [user, setUser] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setUser({
-          name: data.name,
-          about: data.about,
-          avatar: data.avatar,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const currentUser = React.useContext(CurrentUserContext);
 
   return (
     <main className="main">
       <section className="profile-menu">
         <div className="profile-menu__profile-pic">
           <img
+            src={currentUser.avatar}
             className="profile-menu__avatar"
-            src={user.avatar}
             id="avatar_image"
             alt="avatar image"
           ></img>
@@ -50,7 +23,7 @@ function Main(props) {
         </div>
         <div className="profile-menu__info">
           <div className="profile-menu__alignment">
-            <h1 className="profile-menu__full-name">{user.name}</h1>
+            <h1 className="profile-menu__full-name">{currentUser.name}</h1>
             <button
               onClick={props.onEditProfileClick}
               className="profile-menu__edit-button"
@@ -58,10 +31,10 @@ function Main(props) {
               aria-label="edit-button"
             ></button>
           </div>
-          <p className="profile-menu__title">{user.about}</p>
+          <p className="profile-menu__title">{currentUser.about}</p>
         </div>
         <button
-          onClick={props.onAddPlaceClick}
+          onClick={props.onAddCardClick}
           className="profile-menu__add-button"
           type="button"
           aria-label="add-button"
@@ -70,12 +43,14 @@ function Main(props) {
 
       <section className="cards">
         <ul className="cards__list">
-          {cards.map((element) => (
+          {props.cards.map((card) => (
             <Card
-              key={element._id}
-              card={element}
+              key={card._id}
+              card={card}
               onClick={props.onCardImageClick}
               updateCardData={props.updateCardData}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
             />
           ))}
         </ul>
