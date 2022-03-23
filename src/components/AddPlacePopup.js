@@ -5,13 +5,17 @@ function AddPlacePopup(props) {
   const [cardName, setCardName] = React.useState('');
   const [cardLink, setCardLink] = React.useState('');
 
+  React.useEffect(() => {
+    setCardName('');
+    setCardLink('');
+  }, [props.isOpen]);
+
   function handleSubmit(e) {
     e.preventDefault();
     props.onAddCard({
       name: cardName,
       link: cardLink,
     });
-    e.target.reset();
   }
 
   function handleCardNameUpdate(e) {
@@ -33,6 +37,7 @@ function AddPlacePopup(props) {
     >
       <input
         onChange={handleCardNameUpdate}
+        value={cardName || ''}
         className="popup-menu__input popup-menu__input_type_title"
         name="name"
         type="text"
@@ -40,6 +45,7 @@ function AddPlacePopup(props) {
       />
       <input
         onChange={handleCardLinkUpdate}
+        value={cardLink || ''}
         className="popup-menu__input popup-menu__input_type_url"
         name="link"
         type="text"

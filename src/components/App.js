@@ -86,10 +86,13 @@ function App() {
   function handleAddCard(cardData) {
     api
       .uploadUserCard(cardData.name, cardData.link)
-      .then((newCard) => setCards([newCard, ...cards]), closeAllPopups())
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
       .catch((err) => {
-        console.log(err);
-      });
+      console.log(err);
+    });
   }
 
   function handleCardDelete(card) {
@@ -106,7 +109,10 @@ function App() {
   function handleUpdateAvatar(userData) {
     api.setUserAvatar(userData.avatar).then((data) => {
       setCurrentUser(data);
-      closeAllPopups();
+      closeAllPopups()
+        .catch((err) => {
+        console.log(err);
+      });
     });
   }
 
@@ -136,6 +142,18 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsCardImagePopupOpen(false);
   }
+
+  React.useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === 'Escape') {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener('keydown', closeByEscape);
+
+    return () => document.removeEventListener('keydown', closeByEscape);
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
